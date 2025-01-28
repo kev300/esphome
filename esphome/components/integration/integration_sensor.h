@@ -32,7 +32,16 @@ class IntegrationSensor : public sensor::Sensor, public Component {
   void set_time(IntegrationSensorTime time) { time_ = time; }
   void set_method(IntegrationMethod method) { method_ = method; }
   void set_restore(bool restore) { restore_ = restore; }
-  void reset() { this->publish_and_save_(0.0f); }
+  void reset() { this->publish_and_save(0.0f); }
+
+  void publish_and_save(double result) {
+    this->result_ = result;
+    this->publish_state(result);
+    if (this->restore_) {
+      float result_f = result;
+      this->pref_.save(&result_f);
+    }
+  }
 
  protected:
   void process_sensor_value_(float value);
@@ -50,14 +59,6 @@ class IntegrationSensor : public sensor::Sensor, public Component {
         return 1.0f / 86400000.0f;
       default:
         return 0.0f;
-    }
-  }
-  void publish_and_save_(double result) {
-    this->result_ = result;
-    this->publish_state(result);
-    if (this->restore_) {
-      float result_f = result;
-      this->pref_.save(&result_f);
     }
   }
 
