@@ -22,7 +22,7 @@ static const uint8_t RMT_CLK_DIV = 2;
 #endif
 
 void ESP32RMTLEDStripLightOutput::setup() {
-  ESP_LOGCONFIG(TAG, "Setting up ESP32 LED Strip...");
+  ESP_LOGCONFIG(TAG, "Running setup");
 
   size_t buffer_size = this->get_buffer_size_();
 
@@ -58,7 +58,7 @@ void ESP32RMTLEDStripLightOutput::setup() {
   channel.flags.io_loop_back = 0;
   channel.flags.io_od_mode = 0;
   channel.flags.invert_out = 0;
-  channel.flags.with_dma = 0;
+  channel.flags.with_dma = this->use_dma_;
   channel.intr_priority = 0;
   if (rmt_new_tx_channel(&channel, &this->channel_) != ESP_OK) {
     ESP_LOGE(TAG, "Channel creation failed");
